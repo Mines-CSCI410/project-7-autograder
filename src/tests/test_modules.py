@@ -28,28 +28,29 @@ class TestBase(unittest.TestCase):
         self.runStudentCode(name)
         self.assertValidAssembly(name)
         self.runCPUEmulator(name)
-        subprocess.run(['mv', f'/autograder/source/{name}.out' '/autograder/output/'])
-        self.assertNoDiff(f'/autograder/output/{name}.out', f'/autograder/grader/tests/expected-outputs/{name}.cmp')
+        subprocess.run(['mv', f'/autograder/source/{name}.out', '/autograder/outputs/'])
+        self.assertNoDiff(f'/autograder/outputs/{name}.out', f'/autograder/grader/tests/expected-outputs/{name}.cmp')
 
 class TestModules(TestBase): 
     @weight(95/5)
     @number(1)
-    def basic_test(self):
+    def test_basic(self):
+        print('test')
         self.assertCorrectTranslator('BasicTest')
 
     @weight(95/5)
     @number(2)
-    def pointer_test(self):
+    def test_pointer(self):
         self.assertCorrectTranslator('PointerTest')
 
     @weight(95/5)
     @number(3)
-    def stack_test(self):
+    def test_stack(self):
         self.assertCorrectTranslator('StackTest')
 
     @weight(95/5)
     @number(4)
-    def static_test(self):
+    def test_static(self):
         self.assertCorrectTranslator('StaticTest')
 
     @weight(95/5)
