@@ -35,7 +35,6 @@ class TestModules(TestBase):
     @weight(95/5)
     @number(1)
     def test_basic(self):
-        print('test')
         self.assertCorrectTranslator('BasicTest')
 
     @weight(95/5)
