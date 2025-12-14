@@ -15,7 +15,7 @@ class TestBase(unittest.TestCase):
             raise AssertionError(f'Unable to assemble student\'s ASM output!')
 
     def runCPUEmulator(self, name):
-        res = subprocess.call(['n2tCPUEmulator ', f'/autograder/source/{name}.tst'])
+        res = subprocess.call(['n2tCPUEmulator', f'/autograder/source/{name}.tst'])
         if res != 0:
             raise AssertionError(f'Unable to run student\'s ASM on CPU emulator!')
 
