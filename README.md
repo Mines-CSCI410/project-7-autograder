@@ -20,5 +20,5 @@ Python Example:
 ```bash
 #!/bin/bash
 
-python3 VMtranslator.py $@
+python3 VMTranslator.py $@
 ```
