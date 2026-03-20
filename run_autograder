@@ -2,7 +2,9 @@
 
 EXECUTABLE=./VMTranslator
 
-cp -r /autograder/submission/* /autograder/source/
+SUBMISSION_DIR=$(realpath $(dirname $(find /autograder/submission -name 'setup.sh' -type f)))
+echo "Identified ${SUBMISSION_DIR} as root of project."
+cp -r ${SUBMISSION_DIR}/* /autograder/source/
 
 pushd /autograder/source/ >/dev/null
 
