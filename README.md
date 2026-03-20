@@ -10,7 +10,7 @@ Some languages, such as python, will not need to build anything, but should
 still contain an empty `setup.sh` file.
 
 ### Executable
-The executable should be named `VMtranslator`.
+The executable should be named `VMTranslator`.
 
 For interpreted languages, such as python, where your program cannot be built
 into an executable, use a bash script to call their program *passing through

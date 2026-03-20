@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXECUTABLE=./VMtranslator
+EXECUTABLE=./VMTranslator
 
 cp -r /autograder/submission/* /autograder/source/
 

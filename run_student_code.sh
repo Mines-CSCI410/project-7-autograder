@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXECUTABLE=./VMtranslator
+EXECUTABLE=./VMTranslator
 
 pushd /autograder/source/ >/dev/null
 
