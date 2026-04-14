@@ -19,6 +19,7 @@ runuser -u student -- ./setup.sh
 rm -f *.asm *.cmp
 
 mv "./VMtranslator" "${EXECUTABLE}" # allow capitalization from old instructions
+dos2unix ./*
 chmod ugo+x "${EXECUTABLE}"
 
 popd >/dev/null
