@@ -5,31 +5,40 @@ from gradescope_utils.autograder_utils.decorators import weight, number
 
 class TestBase(unittest.TestCase): 
     def runStudentCode(self, name):
-        res = subprocess.call(['./run_student_code.sh', name])
-        if res != 0:
-            raise AssertionError(f'Unable to run student\'s virtual machine translator on {name}.vm!')
+        try:
+            process = subprocess.run(['./run_student_code.sh', name], check=True, text=True, capture_output=True, timeout=30)
+            print(f'{process.stdout.strip()}\n{process.stderr.strip()}'.strip())
+        except subprocess.CalledProcessError as err:
+            error_message = str(err.stderr).strip()
+            raise AssertionError(f'Unable to run student code on {name}.jack: "{error_message}"\n{err.stdout}'.strip())
+        except subprocess.TimeoutExpired as err:
+            raise TimeoutError(f'Student code timed out after {err.timeout} seconds:\n{str(err.stdout).strip()}')
 
     def assertValidAssembly(self, name):
-        res = subprocess.call(['n2tAssembler', f'/autograder/source/{name}.asm'])
-        if res != 0:
-            raise AssertionError(f'Unable to assemble student\'s ASM output!')
+        try:
+            subprocess.run(['n2tAssembler', f'/autograder/source/{name}.asm'], check=True, text=True, capture_output=True, timeout=30)
+        except subprocess.CalledProcessError as err:
+            error_message = str(err.stderr).strip()
+            raise AssertionError(f'Student\'s ASM is invalid, and could not be assembled: "{error_message}"\n{err.stdout}'.strip())
+        except subprocess.TimeoutExpired as err:
+            raise TimeoutError(f'Assembler timed out out after {err.timeout} seconds:\n{str(err.stdout).strip()}')
 
     def runCPUEmulator(self, name):
-        res = subprocess.call(['n2tCPUEmulator', f'/autograder/source/{name}.tst'])
-        if res != 0:
-            raise AssertionError(f'Unable to run student\'s ASM on CPU emulator!')
+        try:
+            subprocess.run(['n2tCPUEmulator', f'/autograder/source/{name}.tst'], check=True, text=True, capture_output=True, timeout=30)
+        except subprocess.CalledProcessError as err:
+            diff = subprocess.check_output(['/bin/sh', '-c', f'diff /autograder/source/{name}.cmp /autograder/source/{name}.out --strip-trailing-cr ; exit 0'], text=True)
+            print(f'Files differ!\n{diff}')
 
-    def assertNoDiff(self, file, expected_file):
-        res = subprocess.call(['diff', file, expected_file, '-qsw', '--strip-trailing-cr'])
-        if res != 0:
-            raise AssertionError(f'Output does not match the expected!')
+            error_message = str(err.stderr).strip()
+            raise AssertionError(f'Student\'s ASM did not pass the provided TST file: "{error_message}"\n{err.stdout}'.strip())
+        except subprocess.TimeoutExpired as err:
+            raise TimeoutError(f'Emulator timed out out after {err.timeout} seconds:\n{str(err.stdout).strip()}')
 
     def assertCorrectTranslator(self, name):
         self.runStudentCode(name)
         self.assertValidAssembly(name)
         self.runCPUEmulator(name)
-        subprocess.run(['mv', f'/autograder/source/{name}.out', '/autograder/outputs/'])
-        self.assertNoDiff(f'/autograder/outputs/{name}.out', f'/autograder/grader/tests/expected-outputs/{name}.cmp')
 
 class TestModules(TestBase): 
     @weight(95/5)
