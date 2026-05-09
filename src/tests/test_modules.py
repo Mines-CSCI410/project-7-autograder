@@ -6,11 +6,11 @@ from gradescope_utils.autograder_utils.decorators import weight, number
 class TestBase(unittest.TestCase): 
     def runStudentCode(self, name):
         try:
-            process = subprocess.run(['./run_student_code.sh', name], check=True, text=True, capture_output=True, timeout=30)
+            process = subprocess.run(['./run_student_code.sh', f'{name}.vm'], check=True, text=True, capture_output=True, timeout=30)
             print(f'{process.stdout.strip()}\n{process.stderr.strip()}'.strip())
         except subprocess.CalledProcessError as err:
             error_message = str(err.stderr).strip()
-            raise AssertionError(f'Unable to run student code on {name}.jack: "{error_message}"\n{err.stdout}'.strip())
+            raise AssertionError(f'Unable to run student code on {name}.vm: "{error_message}"\n{err.stdout}'.strip())
         except subprocess.TimeoutExpired as err:
             raise TimeoutError(f'Student code timed out after {err.timeout} seconds:\n{str(err.stdout).strip()}')
 
@@ -19,7 +19,7 @@ class TestBase(unittest.TestCase):
             subprocess.run(['n2tAssembler', f'/autograder/source/{name}.asm'], check=True, text=True, capture_output=True, timeout=30)
         except subprocess.CalledProcessError as err:
             error_message = str(err.stderr).strip()
-            raise AssertionError(f'Student\'s ASM is invalid, and could not be assembled: "{error_message}"\n{err.stdout}'.strip())
+            raise AssertionError(f'Student\'s generated ASM is invalid, and could not be assembled: "{error_message}"\n{err.stdout}'.strip())
         except subprocess.TimeoutExpired as err:
             raise TimeoutError(f'Assembler timed out out after {err.timeout} seconds:\n{str(err.stdout).strip()}')
 
@@ -31,7 +31,7 @@ class TestBase(unittest.TestCase):
             print(f'Files differ!\n{diff}')
 
             error_message = str(err.stderr).strip()
-            raise AssertionError(f'Student\'s ASM did not pass the provided TST file: "{error_message}"\n{err.stdout}'.strip())
+            raise AssertionError(f'Student\'s generated ASM did not pass the provided TST file: "{error_message}"\n{err.stdout}'.strip())
         except subprocess.TimeoutExpired as err:
             raise TimeoutError(f'Emulator timed out out after {err.timeout} seconds:\n{str(err.stdout).strip()}')
 
