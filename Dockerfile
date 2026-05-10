@@ -8,16 +8,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get clean all -y
 RUN apt-get update -y &&\
 apt-get install -y\
-    build-essential\
-    cmake\
-    gdb\
+    build-essential cmake\
     dos2unix\
     neovim\
     golang\
-    python3\
-    python3-pip\
-    git\
-    python3-dev
+    python3 python3-pip python3-dev\
+    rustc cargo\
+    ocaml opam dune\
+    ghc cabal-install\
+    git
 
 WORKDIR /
 ENV EXPECTED_HASH="b1c0900d2fd0211ae91f03d8680ba27b  -"
