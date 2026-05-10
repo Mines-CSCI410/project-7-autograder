@@ -7,7 +7,7 @@ from gradescope_utils.autograder_utils.decorators import weight, number
 class TestBase(unittest.TestCase): 
     def runStudentCode(self, name):
         try:
-            process = subprocess.run(['./run_student_code.sh', f'{name}.vm'], check=True, text=True, capture_output=True, timeout=30)
+            process = subprocess.run(['./run_student_code.sh', name], check=True, text=True, capture_output=True, timeout=30)
             if len(process.stdout.strip()) > 0:
                 print(process.stdout.strip())
             if len(process.stderr.strip()) > 0:
