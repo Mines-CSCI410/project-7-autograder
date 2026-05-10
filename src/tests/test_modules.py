@@ -32,7 +32,8 @@ class TestBase(unittest.TestCase):
             subprocess.run(['n2tCPUEmulator', f'/autograder/source/{name}.tst'], check=True, text=True, capture_output=True, timeout=30)
         except subprocess.CalledProcessError as err:
             diff = subprocess.check_output(['/bin/sh', '-c', f'diff /autograder/source/{name}.cmp /autograder/source/{name}.out --strip-trailing-cr ; exit 0'], text=True)
-            print(f'Files differ!\n{diff}')
+            if len(diff.strip()) != 0:
+                print(diff)
 
             error_message = str(err.stderr).strip()
             raise AssertionError(f'Student\'s generated ASM did not pass the provided TST file: "{error_message}"\n{err.stdout}'.strip())
