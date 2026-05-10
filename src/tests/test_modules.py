@@ -8,7 +8,10 @@ class TestBase(unittest.TestCase):
     def runStudentCode(self, name):
         try:
             process = subprocess.run(['./run_student_code.sh', f'{name}.vm'], check=True, text=True, capture_output=True, timeout=30)
-            print(f'{process.stdout.strip()}\n{process.stderr.strip()}'.strip())
+            if len(process.stdout.strip()) > 0:
+                print(process.stdout.strip())
+            if len(process.stderr.strip()) > 0:
+                print(process.stderr.strip())
         except subprocess.CalledProcessError as err:
             error_message = str(err.stderr).strip()
             raise AssertionError(f'Unable to run student code on {name}.vm: "{error_message}"\n{err.stdout}'.strip())
